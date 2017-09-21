@@ -1,0 +1,83 @@
+html,
+body {
+    overflow: hidden;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #32915D;
+    font-family: Calibri;
+    font-weight: bold;
+    color: #224923
+}
+
+.mybutton {
+    padding: 10px 15px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    background-color: #2B852E;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px #105410;
+    margin: 5px;
+    width:100%;
+}
+
+.mybutton:enabled {
+    color: #fff;
+}
+
+.mybutton:disabled {
+    color: #769976
+}
+
+.mybutton:hover:enabled {
+    background-color: #306d32
+}
+
+.mybutton:active:enabled {
+    background-color: #3e8e41;
+    box-shadow: 0 1px #105410;
+    transform: translateY(4px);
+}
+
+img {
+    position: absolute;
+    margin: 0px;
+}
+
+div {
+    padding: 0px;
+    margin: 0px;
+    position: relative;
+}
+
+.full {
+    width: 100%;
+    height: 100%;    
+}
+
+span {
+    font-size: larger;
+    margin: 0px 5px 0px 0px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+input {
+    background-color: #bff8c0;
+    margin: 2px;
+}
+
+td {
+    padding: 7px;
+    margin: 0px;
+    vertical-align: top;
+}

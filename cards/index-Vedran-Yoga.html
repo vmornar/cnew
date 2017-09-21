@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' type='text/css' href='css.css'>
+    <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
+    <link rel="stylesheet" href="jquery-ui/jquery-ui.structure.css">
+    <link rel="stylesheet" href="jquery-ui/jquery-ui.theme.css">
+    <script src='jquery.min.js'></script>
+    <script src="jquery-ui/jquery-ui.js"></script>
+    <script src="jquery.ui.touch-punch.min.js"></script>
+    <script src='params.js'></script>
+    <script src='game.js'></script>
+
+</head>
+
+<body>
+
+    <div id='maindiv' class='full'>
+        <table>
+            <tr style='height:40%'>
+                <td rowspan='3' style='width:15%'>
+                    <div class='full'>
+                        <table>
+                            <tr style='height:20%'>
+                                <td>
+                                    <div class='full'>
+                                        <span>Player</span><input style='width:100%' id='inputname' value=''></input><br>
+
+                                        <button class='mybutton' id='btnjoin' onclick='join()'>Joine</button>
+                                        <button class='mybutton' id='btnleave' onclick='leave()'>Leave</button>
+                                        <button class='mybutton' id='btnreset' onclick='resetTotals()'>Game</button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style='height:80%'>
+                                <td>
+                                    <div id='divdeck' class='full'></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+                <td style='width:85%'>
+                    <span id='name1'></span><span id='result1'></span><span style='float: right'><span id='win1'></span><span id='total1'>0</span></span>
+                    <div id='player1' class='full'></div>
+                </td>
+            </tr>
+            <tr style='height:20%'>
+                <td>
+                    <table>
+                        <tr>
+                            <td style="width:80%">
+                                <div id='discard' style='background-color:green' class='full'></div>
+                            </td>
+                            <td style="width:20%">
+                                <button class='mybutton' id='btntakeOne' onclick='takeOne()'>One</button>
+                                <button class='mybutton' id='btntake' onclick='take()'>Call</button>
+                                <button class='mybutton' id='btndeal' onclick='deal()'>Deal</button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr style='height:40%'>
+                <td>
+                    <span id='name0'></span><span id='result0'></span><span style='float: right'><span id='win0'></span><span id='total0'>0</span></span>
+                    <div id='player0' class='full'></div>
+                </td>
+            </tr>
+        </table>
+        <div id="dialog-confirm" hidden="hidden" title="Start new game?">Totals will be reset to zero!</div>
+        <div id="dialog-missing" hidden="hidden" title="Error">Player name is missing!</div>
+    </div>
+</body>
+
+</html>

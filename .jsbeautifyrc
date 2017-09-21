@@ -1,0 +1,5 @@
+{
+    "indent_size": 4,
+    "indent_char": " ",
+    "beautify.onSave": true // beautify HTML, CSS, JavaScript, and JSON on save
+}
