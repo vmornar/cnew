@@ -6,6 +6,8 @@ var game = require('./game');
 var params = require('./cards/params')
 
 const fs = require('fs');
+const port = process.env.PORT || 8080;
+
 
 
 if (1 == 0) {
@@ -48,7 +50,7 @@ app.use(express.static('static'));
 app.use(express.static('.'));
 app.use('/', router);
 
-var server = httpsserver.listen(params.port, function () {
+var server = httpsserver.listen(port, function () {
 	console.log('http server running at ', server.address().port, ' ', server.address().address);
 	var webSocketServer = new (require('ws')).Server({ server: server }),
 		webSockets = {};

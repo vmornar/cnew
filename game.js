@@ -1,4 +1,4 @@
-var app = require('./app');
+var app = require('.');
 var deck = [];
 var colors = ['clubs', 'diamonds', 'hearts', 'spades'];
 var dealer = 0;
