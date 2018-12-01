@@ -1,11 +1,19 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "0.1.0",
-    "command": "tsc",
+    "command": "cmd",
     "isShellCommand": true,
-    "args": ["-w", "-p", "."],
-    "showOutput": "always", 
-    "isWatching": true, 
-    "problemMatcher": "$tsc-watch" 
+    "args": ["/C"],
+    "showOutput": "silent",
+    "isWatching": true,
+    "tasks": [
+        {
+            "taskName": "tsc",
+            "args": ["-w", "-p", "."],
+            "problemMatcher": "$tsc-watch"            
+        },
+        {
+            "taskName": "gulp",
+            "args": ["--no-color"]
+        }
+    ]
 }

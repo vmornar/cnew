@@ -45,19 +45,35 @@ function addToQueue(action, selector, p1, p2) {
     if (!busy) execute();
 }
 
-$(document).ready(function() {
+function cardClick(id) {
+    sel = "#" + id;
+    if (($(sel).attr('data-dropped'))) return;
+    let j;
+    let iCard = id.substring(1);
+
+    for (j = 0; j < cnt[0]; j++) {
+        if (hands[0][j].iCard == iCard) break;
+    }
+    if (j < cnt[0]) {
+        ws.send('{"command":"discard", "i":' + iCard + '}');
+        $(btntakeOne).disable();
+    }
+}
+
+$(document).ready(function () {
     $(btndeal).disable();
     $(btnjoin).enable();
     $(btnleave).disable();
     $(btnreset).disable();
     $(discard).droppable({
-        drop: function(event, ui) {
+        drop: function (event, ui) {
             let d = ui.draggable; // draggable attr id
             d.draggable('option', 'revert', false);
             d.draggable('disable');
+            sel = "#" + d.attr('id')
+            $(sel).attr('data-dropped', true);
             ws.send('{"command":"discard", "i":' + d.attr('id').substring(1) + '}');
             $(btntakeOne).disable();
-            oldTime = new Date();
         }
     });
     reset();
@@ -98,7 +114,7 @@ function join() {
             resizable: false,
             modal: true,
             buttons: {
-                Ok: function() {
+                Ok: function () {
                     $(this).dialog("close");
                 }
             }
@@ -110,16 +126,16 @@ function join() {
     $(btnjoin).disable();
     $(btnreset).enable();
 
-    ws = new WebSocket("wss://" + IP + ":" + port + "/crdsocket/" + myname);
+    ws = new WebSocket("ws://" + IP + ":" + port + "/crdsocket/" + myname); // 443
 
-    ws.onopen = function(e) {
+    ws.onopen = function (e) {
         ws.send('{"command":"join"}');
         $(btnjoin).disable();
         $(btnleave).enable();
 
     }
 
-    ws.onmessage = function(msg) {
+    ws.onmessage = function (msg) {
         let iCard;
         let player;
 
@@ -131,7 +147,7 @@ function join() {
         } else if (cmd.command == 'init') {
             iCard = cmd.iCard;
             deck[iCard] = cmd.card;
-            var c = "<img id='{0}' src='{1}' style='left:{2}; top:{3}'></img>".format(
+            var c = "<img id='{0}' src='{1}' style='left:{2}; top:{3}' onclick='cardClick(this.id)'></img>".format(
                 'c' + iCard,
                 back,
                 '10px',
@@ -147,7 +163,7 @@ function join() {
             player = findPlayer(cmd.name);
 
             let j = cnt[player]++;
-            wCard = Math.min($('#c0').width() + 5, $(discard).width()*1.25 / 6);
+            wCard = Math.min($('#c0').width() + 5, $(discard).width() * 1.25 / 6);
             let xc = x[player] + j * wCard;
             hands[player][j] = {
                 iCard: iCard,
@@ -266,7 +282,6 @@ function join() {
 
         } else if (cmd.command == 'result') {
             console.log(cmd);
-            console.log(cmd.result);
             player = findPlayer(cmd.name);
             $('#result' + player).html(cmd.result.score);
             $('#total' + player).html(cmd.result.total);
@@ -306,13 +321,13 @@ function resetTotals() {
         resizable: false,
         modal: true,
         buttons: {
-            "Confirm": function() {
+            "Confirm": function () {
                 $(total0).html("0");
                 $(total1).html("0");
                 ws.send('{"command":"resetTotals"}')
                 $(this).dialog("close");
             },
-            Cancel: function() {
+            Cancel: function () {
                 $(this).dialog("close");
             }
         }
@@ -322,9 +337,9 @@ function resetTotals() {
 }
 
 if (!String.prototype.format) {
-    String.prototype.format = function() {
+    String.prototype.format = function () {
         var args = arguments;
-        return this.replace(/{(\d+)}/g, function(match, number) {
+        return this.replace(/{(\d+)}/g, function (match, number) {
             return typeof args[number] != 'undefined' ?
                 args[number] :
                 match;
@@ -333,13 +348,13 @@ if (!String.prototype.format) {
 }
 
 jQuery.fn.extend({
-    disable: function() {
-        return this.each(function() {
+    disable: function () {
+        return this.each(function () {
             $(this).attr('disabled', true);
         });
     },
-    enable: function() {
-        return this.each(function() {
+    enable: function () {
+        return this.each(function () {
             $(this).attr('disabled', false);
         });
     }
