@@ -6,12 +6,22 @@ var game = require('./game');
 var params = require('./cards/params')
 
 const fs = require('fs');
-var options = {
-    key: fs.readFileSync('/etc/nginx/ssl/nginx.key'),
-    cert: fs.readFileSync('/etc/nginx/ssl/nginx.crt')
-};
-const https = require('https');
-var httpsserver = https.createServer(options, app);
+
+const port = process.env.PORT || 8080;
+
+
+
+if (1 == 0) {
+    const https = require('https');
+    var options = {
+        key: fs.readFileSync('/etc/nginx/ssl/nginx.key'),
+        cert: fs.readFileSync('/etc/nginx/ssl/nginx.crt')
+    };
+    var httpsserver = https.createServer(options, app);
+} else {
+    const https = require('http');
+    var httpsserver = https.createServer(app);
+}
 
 router.use(function(req, res, next) {
     if (!req.url.startsWith("/cards")) req.url = "/cards" + req.url;
@@ -42,16 +52,13 @@ app.use(express.static('static'));
 app.use(express.static('.'));
 app.use('/', router);
 
-//httpsserver.listen (9002);
-
-var server = httpsserver.listen(params.port, function() {
+var server = httpsserver.listen(port, function() {
     console.log('http server running at ', server.address().port, ' ', server.address().address);
     var webSocketServer = new(require('ws')).Server({
             server: server
         }),
         webSockets = {};
     console.log('Web Socket server running on same port');
-
     webSocketServer.on('connection', function(webSocket, req) {
         console.log("connecting:" + req.url.substr(1));
         var userID = req.url.substr(1).replace("crdsocket/", "");
@@ -62,7 +69,9 @@ var server = httpsserver.listen(params.port, function() {
             var cmd = JSON.parse(message);
             console.log(cmd.command);
             if (cmd.command == 'join') {
+                console.log("joined " + userID);
                 game.joined(userID);
+                game.resetTotals();
             } else if (cmd.command == 'deal') {
                 game.deal();
             } else if (cmd.command == 'discard') {

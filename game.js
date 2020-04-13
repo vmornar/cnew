@@ -41,6 +41,10 @@ function deal() {
     hands[1] = {};
     taken[0] = 0;
     taken[1] = 0;
+    for (var userID in app.webSockets) {
+        user = findPlayer(userID);
+        results[user].winning = 0;
+    }
     sendToAll('{"command":"reset"}');
     for (i = 51; i >= 0; i--) {
         var json = '{"command":"init", "iCard":"' + i + '", "card":' + JSON.stringify(deck[i]) + '}';
@@ -80,6 +84,7 @@ function joined(name) {
     var user = findPlayer(name);
     for (var userID in app.webSockets) {
         sendToAll('{"command":"joined", "name":"' + userID + '"}');
+        results[user] = {};
     }
     countUsers();
     nextDealer();
@@ -119,9 +124,7 @@ function take(userID) {
             user = findPlayer(userID_1);
             results[user] = evaluate(userID_1);
         }
-        console.log(totals);
         winner();
-        console.log(totals);
         for (var userID_2 in app.webSockets) {
             sendToAll('{"command":"result", "name":"' + userID_2 + '", "result":' + JSON.stringify(results[findPlayer(userID_2)]) + '}');
         }
@@ -145,9 +148,9 @@ function evaluate(userID) {
     for (var c in hands[user]) {
         hand[i++] = deck[parseInt(c)];
     }
-    console.log("unsorted", hand);
+
     hand.sort(compareCards);
-    console.log("sorted", hand);
+
     var result = 0, v;
     var prev = {
         color: 'none',
@@ -196,6 +199,8 @@ function evaluate(userID) {
             highCard[3 + 5] = v;
             if (result == 0)
                 result = 3;
+            else if (result == 2)
+                result = 6;
             else if (result == 1 && pairCard != v)
                 result = 6;
             else if (result == 1 && pairCard == v)
@@ -253,6 +258,7 @@ function compareResults(a, b) {
 function winner() {
     var tempresults = results.slice();
     tempresults.sort(compareResults);
+    console.log(tempresults);
     var user = findPlayer(tempresults[0].name);
     totals[user]++;
     results[user].winning = 1;
