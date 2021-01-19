@@ -16,32 +16,52 @@ var jqueue = [];
 var busy = false;
 var wCard;
 
-function execute() {
+// function execute() {
+//     if (jqueue.length > 0) {
+//         busy = true;
+//         let a = jqueue.shift();
+//         if (a.action == 'animate') {
+//             $(a.selector).animate(a.p1, a.p2, execute);
+//         } else if (a.action == 'attr') {
+//             $(a.selector).attr(a.p1, a.p2);
+//             execute();
+//         } else if (a.action == 'css') {
+//             $(a.selector).css(a.p1, a.p2);
+//             execute();
+//         }
+//     } else {
+//         busy = false;
+//     }
+// }
+
+async function execute() {
     if (jqueue.length > 0) {
-        busy = true;
+        //busy = true;
         let a = jqueue.shift();
         if (a.action == 'animate') {
-            $(a.selector).animate(a.p1, a.p2, execute);
+            await $(a.selector).animate(a.p1, a.p2);
+            await execute();
         } else if (a.action == 'attr') {
             $(a.selector).attr(a.p1, a.p2);
-            execute();
+            await execute();
         } else if (a.action == 'css') {
             $(a.selector).css(a.p1, a.p2);
-            execute();
+            await execute();
         }
     } else {
-        busy = false;
+        //busy = false;
     }
 }
 
-function addToQueue(action, selector, p1, p2) {
+async function addToQueue(action, selector, p1, p2) {
     jqueue.push({
         action,
         selector,
         p1,
         p2
     });
-    if (!busy) execute();
+    // if (!busy) execute();
+    await execute();
 }
 
 function cardClick(id) {
@@ -59,13 +79,13 @@ function cardClick(id) {
     }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     $(btndeal).disable();
     $(btnjoin).enable();
     $(btnleave).disable();
     $(btnreset).disable();
     $(discard).droppable({
-        drop: function(event, ui) {
+        drop: function (event, ui) {
             let d = ui.draggable; // draggable attr id
             d.draggable('option', 'revert', false);
             d.draggable('disable');
@@ -113,7 +133,7 @@ function join() {
             resizable: false,
             modal: true,
             buttons: {
-                Ok: function() {
+                Ok: function () {
                     $(this).dialog("close");
                 }
             }
@@ -131,14 +151,14 @@ function join() {
     else
         ws = new WebSocket(l.replace("http://", "ws://") + "crdsocket/" + myname);
 
-    ws.onopen = function(e) {
+    ws.onopen = function (e) {
         ws.send('{"command":"join"}');
         $(btnjoin).disable();
         $(btnleave).enable();
 
     }
 
-    ws.onmessage = function(msg) {
+    ws.onmessage = function (msg) {
         let iCard;
         let player;
 
@@ -324,13 +344,13 @@ function resetTotals() {
         resizable: false,
         modal: true,
         buttons: {
-            "Confirm": function() {
+            "Confirm": function () {
                 $(total0).html("0");
                 $(total1).html("0");
                 ws.send('{"command":"resetTotals"}')
                 $(this).dialog("close");
             },
-            Cancel: function() {
+            Cancel: function () {
                 $(this).dialog("close");
             }
         }
@@ -340,9 +360,9 @@ function resetTotals() {
 }
 
 if (!String.prototype.format) {
-    String.prototype.format = function() {
+    String.prototype.format = function () {
         var args = arguments;
-        return this.replace(/{(\d+)}/g, function(match, number) {
+        return this.replace(/{(\d+)}/g, function (match, number) {
             return typeof args[number] != 'undefined' ?
                 args[number] :
                 match;
@@ -351,13 +371,13 @@ if (!String.prototype.format) {
 }
 
 jQuery.fn.extend({
-    disable: function() {
-        return this.each(function() {
+    disable: function () {
+        return this.each(function () {
             $(this).attr('disabled', true);
         });
     },
-    enable: function() {
-        return this.each(function() {
+    enable: function () {
+        return this.each(function () {
             $(this).attr('disabled', false);
         });
     }

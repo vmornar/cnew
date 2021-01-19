@@ -146,7 +146,9 @@ function evaluate(userID) {
     var hand = [];
     var i = 0;
     for (var c in hands[user]) {
-        hand[i++] = deck[parseInt(c)];
+        hand[i] = deck[parseInt(c)];
+        if (hand[i].value == 1) hand[i].value = 14;
+        i++;
     }
 
     hand.sort(compareCards);
@@ -156,77 +158,98 @@ function evaluate(userID) {
         color: 'none',
         value: -2
     };
-    var sameCount = 1, sameColor = 1, sequence = 1, pairCard = -1, highCard = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], results = ['Nothing', 'One Pair', 'Two Pair', 'Three of a Kind', 'Straight', 'Flush', 'Full House', 'Four of a Kind', 'Straight Flush', 'Royal Flush'];
+    var sameCount = 1, sameColor = 1, sequence = 1, pairCard = -1,
+        highCard = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        results = ['Nothing', 'One Pair', 'Two Pair', 'Three of a Kind', 'Straight', 'Flush', 'Full House', 'Four of a Kind', 'Straight Flush', 'Royal Flush'];
+
     for (i = 0; i < 5; i++) {
         v = hand[i].value;
+
         if (v != prev.value) {
             sameCount = 1;
-            if (v == prev.value + 1 || prev.value == 13 && v == 1) {
+            if (v == prev.value + 1
+                || sequence == 4 && i == 4 && v == 14 && prev.value == 5) { // 2, 3, 4, 5 and then Ace
                 sequence++;
-            }
-            else {
+            } else {
                 sequence = 1;
             }
-        }
-        else {
+        } else {
             sameCount++;
         }
-        if (v == 1)
-            v = 14;
+
         if (hand[i].color == prev.color) {
             sameColor++;
-        }
-        else {
+        } else {
             sameColor = 1;
         }
+
         prev = hand[i];
+
         if (sameCount == 2) {
-            if (result == 0) {
+            if (result == 0) { // First pair
                 highCard[1 + 5] = v;
                 pairCard = v;
                 result = 1;
-            }
-            else if (result == 1) {
+            } else if (result == 1) { // Second pair
                 highCard[2 + 5] = maxOf(highCard[1 + 5], v);
                 result = 2;
-            }
-            else if (result == 3) {
+            } else if (result == 3) { // Pair after a triple
                 highCard[1 + 5] = v;
                 result = 6;
             }
-        }
-        else if (sameCount == 3) {
+        } else if (sameCount == 3) {
             highCard[3 + 5] = v;
-            if (result == 0)
+            if (result == 0) {
                 result = 3;
-            else if (result == 2)
+            } else if (result == 2) {
+                highCard[6 + 5] = v;
                 result = 6;
-            else if (result == 1 && pairCard != v)
+            } else if (result == 1 && pairCard != v) {
+                highCard[6 + 5] = v;
                 result = 6;
-            else if (result == 1 && pairCard == v)
+            } else if (result == 1 && pairCard == v) {
                 result = 3;
-        }
-        else if (sameCount == 4) {
+            }
+        } else if (sameCount == 4) {
             highCard[4 + 5] = v;
             result = 7;
         }
     }
-    if (sequence == 5 && sameColor == 5)
+    if (sequence == 5 && sameColor == 5) {
+        highCard[8 + 5] = v;
         result = 8;
-    if (result < 4 && sequence == 5)
-        result = 4;
-    if (result < 5 && sameColor == 5)
-        result = 5;
-    // find singles
-    var k = 4;
-    if (hand[4] != hand[3])
-        highCard[k--] = hand[4].value == 1 ? 14 : 1;
-    for (i = 3; i > 0; i--) {
-        if (hand[i] != hand[i - 1] && hand[i] != hand[i + 1])
-            highCard[k--] = hand[i].value == 1 ? 14 : 1;
     }
-    if (hand[1] != hand[0])
-        highCard[k--] = hand[0].value == 1 ? 14 : 1;
+    if (result < 4 && sequence == 5) {
+        highCard[4 + 5] = v;
+        result = 4;
+    }
+    if (result < 5 && sameColor == 5) {
+        highCard[5 + 5] = v;
+        result = 5;
+    }
+
+    // find singles
+    for (i = 0; i <= 4; i++) {
+        if (hand[i].value == 1) {
+            hand[i].value = 14;
+        }
+    }
+    hand.sort(compareCards);
+    for (i = 0; i <= 4; i++) {
+        highCard[i] = hand[i].value;
+    }
+
+    // var k = 4;
+    // if (hand[4] != hand[3])
+    //     highCard[k--] = hand[4].value == 1 ? 14 : 1;
+    // for (i = 3; i > 0; i--) {
+    //     if (hand[i] != hand[i - 1] && hand[i] != hand[i + 1])
+    //         highCard[k--] = hand[i].value == 1 ? 14 : 1;
+    // }
+    // if (hand[1] != hand[0])
+    //     highCard[k--] = hand[0].value == 1 ? 14 : 1;
+
+
     return {
         name: userID,
         scoreNum: result,
@@ -236,25 +259,27 @@ function evaluate(userID) {
         winning: 0
     };
 }
+
 function compareResults(a, b) {
+    console.log(a.scoreNum, a.score, b.scoreNum, b.score);
+    console.log(a.highCard);
+    console.log(b.highCard);
     if (a.scoreNum > b.scoreNum) {
         return -1;
-    }
-    else if (a.scorenum < b.scoreNum) {
+    } else if (a.scorenum < b.scoreNum) {
         return 1;
-    }
-    else {
+    } else {
         for (var i_1 = a.highCard.length - 1; i_1 >= 0; i_1--) {
             if (a.highCard[i_1] > b.highCard[i_1]) {
                 return -1;
-            }
-            else if (a.highCard[i_1] < b.highCard[i_1]) {
+            } else if (a.highCard[i_1] < b.highCard[i_1]) {
                 return 1;
             }
         }
     }
     return 0;
 }
+
 function winner() {
     var tempresults = results.slice();
     tempresults.sort(compareResults);
