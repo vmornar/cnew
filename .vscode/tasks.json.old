@@ -1,0 +1,19 @@
+{
+    "version": "0.1.0",
+    "command": "cmd",
+    "isShellCommand": true,
+    "args": ["/C"],
+    "showOutput": "silent",
+    "isWatching": true,
+    "tasks": [
+        {
+            "taskName": "tsc",
+            "args": ["-w", "-p", "."],
+            "problemMatcher": "$tsc-watch"            
+        },
+        {
+            "taskName": "gulp",
+            "args": ["--no-color"]
+        }
+    ]
+}

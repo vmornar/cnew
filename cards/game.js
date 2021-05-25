@@ -309,7 +309,9 @@ function join() {
             $('#result' + player).html(cmd.result.score);
             $('#total' + player).html(cmd.result.total);
             $('#win' + player).html(cmd.result.winning == 1 ? "Win" : "");
-        }
+        } else if (cmd.command == 'time') {
+            $("#time").html(cmd.time);
+        } 
     }
 }
 
@@ -317,7 +319,12 @@ function deal() {
     $("img").remove();
     ws.send('{"command":"deal"}');
     $(btndeal).disable();
+    $("#time").html("")
     //$.get('deal');
+}
+
+function tim(arg) {
+    ws.send('{"command":"tim' + arg + '"}');
 }
 
 function leave() {

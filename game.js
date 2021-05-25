@@ -7,9 +7,21 @@ var taken = [];
 var totals = [0, 0, 0, 0];
 var results = [];
 var i = 0;
+var timerVariable = null;
+var seconds = 0;
+var paused = false;
+
+function timer() {
+    if (!paused) {
+        seconds++;
+        sendToAll('{"command" : "time", "seconds" : "' + seconds + '"}');
+    }
+}
+
 function findPlayer(playerName) {
     return playerName == Object.keys(app.webSockets)[0] ? 0 : 1;
 }
+
 function nextCard(userID) {
     hands[findPlayer(userID)][i] = 1;
     var json = '{"command":"card", "name":"' + userID + '", "iCard":' + i + '}';
@@ -289,6 +301,19 @@ function winner() {
     results[user].winning = 1;
     results[user].total++;
 }
+
+function time(t) {
+    if (t == '0') {
+        seconds = 0;
+        if (!timerVariable) timerVariable = setInterval(timer, 1000);
+        paused = false;
+    } else if (t == '1') {
+        window.clearInterval(timerVariable);
+    } else if (t == '2') {
+        paused = !paused;
+    }
+}
+
 // exports
 exports.deal = deal;
 exports.joined = joined;
@@ -297,3 +322,4 @@ exports.left = left;
 exports.take = take;
 exports.takeOne = takeOne;
 exports.resetTotals = resetTotals;
+exports.time = time;

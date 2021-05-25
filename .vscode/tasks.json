@@ -1,19 +1,34 @@
 {
-    "version": "0.1.0",
+    "version": "2.0.0",
     "command": "cmd",
-    "isShellCommand": true,
-    "args": ["/C"],
-    "showOutput": "silent",
+    "args": [
+        "/C"
+    ],
     "isWatching": true,
     "tasks": [
         {
-            "taskName": "tsc",
-            "args": ["-w", "-p", "."],
-            "problemMatcher": "$tsc-watch"            
+            "label": "tsc",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/C",
+                "tsc",
+                "-w",
+                "-p",
+                "."
+            ],
+            "problemMatcher": "$tsc-watch"
         },
         {
-            "taskName": "gulp",
-            "args": ["--no-color"]
+            "label": "gulp",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/C",
+                "gulp",
+                "--no-color"
+            ],
+            "problemMatcher": []
         }
     ]
 }

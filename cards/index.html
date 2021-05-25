@@ -26,7 +26,8 @@
                             <tr style='height:20%'>
                                 <td>
                                     <div class='full'>
-                                        <span>Player</span><input style='width:100%' id='inputname' value=''></input><br>
+                                        <span>Player</span><input style='width:100%' id='inputname'
+                                            value=''></input><br>
                                         <button class='mybutton' id='btnjoin' onclick='join()'>Join</button>
                                         <button class='mybutton' id='btnleave' onclick='leave()'>Leave</button>
                                         <button class='mybutton' id='btnreset' onclick='resetTotals()'>Game</button>
@@ -43,7 +44,8 @@
                     </div>
                 </td>
                 <td style='width:85%'>
-                    <span id='name1'></span><span id='result1'></span><span style='float: right'><span id='win1'></span><span id='total1'>0</span></span>
+                    <span id='name1'></span><span id='result1'></span><span style='float: right'><span
+                            id='win1'></span><span id='total1'>0</span></span>
                     <div id='player1' class='full'></div>
                 </td>
             </tr>
@@ -52,12 +54,16 @@
                     <table>
                         <tr>
                             <td style="width:80%; height:100%">
-                                <div id='discard' style='background-color:green' class='full'></div>
+                                <div id='discard' style='background-color:green' class='full'><span id='time'
+                                        style='font-size:50px; float:right'></span> </div>
                             </td>
                             <td style="width:20%">
                                 <button class='mybutton' id='btntakeOne' onclick='takeOne()'>One</button>
                                 <button class='mybutton' id='btntake' onclick='take()'>Call</button>
                                 <button class='mybutton' id='btndeal' onclick='deal()'>Deal</button>
+                                <button class='mybutton' onclick="tim(0)">Start</button>
+                                <button class='mybutton' onclick="tim(1)">Stop</button>
+                                <button class='mybutton' onclick="tim(2)">Pause</button>
                             </td>
                         </tr>
                     </table>
@@ -65,7 +71,8 @@
             </tr>
             <tr style='height:40%'>
                 <td>
-                    <span id='name0'></span><span id='result0'></span><span style='float: right'><span id='win0'></span><span id='total0'>0</span></span>
+                    <span id='name0'></span><span id='result0'></span><span style='float: right'><span
+                            id='win0'></span><span id='total0'>0</span></span>
                     <div id='player0' class='full'></div>
                 </td>
             </tr>
@@ -73,6 +80,7 @@
         <div id="dialog-confirm" hidden="hidden" title="Start new game?">Totals will be reset to zero!</div>
         <div id="dialog-missing" hidden="hidden" title="Error">Player name is missing!</div>
     </div>
+
 </body>
 
 </html>
