@@ -7,7 +7,7 @@ var taken = [];
 var totals = [0, 0, 0, 0];
 var results = [];
 var i = 0;
-var timerVariable = null;
+var timerVariable = 0;
 var seconds = 0;
 var paused = false;
 
@@ -308,7 +308,8 @@ function time(t) {
         if (!timerVariable) timerVariable = setInterval(timer, 1000);
         paused = false;
     } else if (t == '1') {
-        window.clearInterval(timerVariable);
+        //clearInterval(timerVariable);
+        paused = true;
     } else if (t == '2') {
         paused = !paused;
     }

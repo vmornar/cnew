@@ -8,7 +8,7 @@ var params = require('./cards/params')
 const fs = require('fs');
 const { setInterval } = require('timers');
 
-const port = process.env.PORT || 8019;
+const port = process.env.PORT || 8089;
 
 
 if (1 == 0) {
@@ -83,7 +83,7 @@ var server = httpsserver.listen(port, function () {
             } else if (cmd.command == 'take') {
                 game.take(userID);
             } else if (cmd.command.substring(0, 3) == 'tim') {
-                game.time(cmd.command.substring(3, 1))
+                game.time(cmd.command.substring(3, 4))
             }
         });
 

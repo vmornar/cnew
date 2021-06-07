@@ -310,7 +310,7 @@ function join() {
             $('#total' + player).html(cmd.result.total);
             $('#win' + player).html(cmd.result.winning == 1 ? "Win" : "");
         } else if (cmd.command == 'time') {
-            $("#time").html(cmd.time);
+            $("#time").html(cmd.seconds);
         } 
     }
 }
@@ -324,6 +324,7 @@ function deal() {
 }
 
 function tim(arg) {
+    if (arg == "1") $("#time").html("");
     ws.send('{"command":"tim' + arg + '"}');
 }
 
