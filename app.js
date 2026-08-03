@@ -40,7 +40,7 @@ router.get('/cards', function (req, res) {
     });
 })
 
-router.get('/cards/*.gif', function (req, res) {
+router.get(/^\/cards\/.*\.gif$/, function (req, res) {
     res.sendFile("./static" + req.url.replace("/cards", ""), {
         root: __dirname
     });
