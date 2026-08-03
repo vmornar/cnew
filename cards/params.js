@@ -1,6 +1,6 @@
-// const IP = '161.53.18.58';
+//const IP = 'mornar.no-ip.org';
 const IP = 'localhost';
-const port = '8082';
+const port = '8080';
 if (typeof window === 'undefined') {
     exports.IP = IP;
     exports.port = port;
